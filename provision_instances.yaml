@@ -1,0 +1,16 @@
+#!/usr/bin/env ansible-playbook -i inventory
+---
+
+- name: Provision the instances
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - include: tasks/keypair.yaml name="ansible" 
+    - include: tasks/securitygroup.yaml name="webservers" vpc_id="vpc-7f95d51a"
+    - include: tasks/securitygroup.yaml name="dbservers" vpc_id="vpc-7f95d51a" 
+    - include: tasks/instance.yaml name="teste_web1" securitygroup="webservers" keypair="ansible" instance_type="t2.micro" subnet_id="subnet-b7a68fd2" 
+    - include: tasks/instance.yaml name="teste_web2" securitygroup="webservers" keypair="ansible" instance_type="t2.micro" subnet_id="subnet-b7a68fd2"
+    - include: tasks/instanceMongo.yaml name="teste_db1" securitygroup="dbservers" keypair="ansible" instance_type="t2.micro"   subnet_id="subnet-b7a68fd2"
+    - include: tasks/instanceMongo.yaml name="teste_db2" securitygroup="dbservers" keypair="ansible" instance_type="t2.small"   subnet_id="subnet-b7a68fd2"
+
